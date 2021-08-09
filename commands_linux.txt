@@ -13,13 +13,11 @@ chown -R jdeepanshu:jdeepanshu /home/jdeepanshu/.ssh
 ---------------------------------------------------------------------
 /etc/security --- limit.conf file can increase the memory size for particular 
 
-Tanancy: suneratech123
-username: narendra.gudapati
-Password: Sunera@67899
+
 ---------------------------------------
 hostnamectl set-hostname your-new-hostname
 --------------------------------------
-*r6.3Mf2f{ED[5'H----- santosh.bushireddy
+
 vim /home/jdeepanshu/.ssh/authorized_keys
 
 chage -E 2020-3-21 <username> -- to change account expiry
