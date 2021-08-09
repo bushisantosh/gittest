@@ -1,0 +1,289 @@
+/etc/hosts and /etc/resolv.conf when ever we make any changes in this files and to make it consistent across the reboot or when dhcp lease is reneweed the changes will be removed..
+
+so add below line in /etc/oci-hostname.conf
+PRESERVE_HOSTINFO=2
+
+----------------------------------------------------------
+useradd -c "Deepanshu Jha" jdeepanshu
+mkdir /home/jdeepanshu/.ssh
+touch /home/jdeepanshu/.ssh/authorized_keys
+chmod 700 /home/jdeepanshu/.ssh
+chmod 600 /home/jdeepanshu/.ssh/authorized_keys
+chown -R jdeepanshu:jdeepanshu /home/jdeepanshu/.ssh
+---------------------------------------------------------------------
+/etc/security --- limit.conf file can increase the memory size for particular 
+
+Tanancy: suneratech123
+username: narendra.gudapati
+Password: Sunera@67899
+---------------------------------------
+hostnamectl set-hostname your-new-hostname
+--------------------------------------
+*r6.3Mf2f{ED[5'H----- santosh.bushireddy
+vim /home/jdeepanshu/.ssh/authorized_keys
+
+chage -E 2020-3-21 <username> -- to change account expiry
+chage -E -1 <username> -- to change never expiry account
+chage -l <username>
+chage --list <username>
+chage -M 60 <username>
+chage -d 0 rsathish     -- to expire the password and ask to password when first login
+chage -m 0 -M 99999 -I -1 -E -1 dhinesh -- Passwd never expiry
+
+grep "<group name>" /etc/groups   -- to check number users in this group
+gpasswd -a vamshi <groupname>
+
+===================================================================================================================
+mount --bind <disk name> --
+
+rsync -avzhe "ssh -i /root/opc.pem" /prod_backup/STERLING_PROD_DB_BACKUP/PROD_20200409  opc@10.218.64.234:/storagegw-6tb-bv/sterling_prod_DB_archive/RMAN_BACKUP
+
+du -sh *
+du --apparent-size -sh * 
+========================Firewall================================
+firewall-cmd --zone=public --add-port=443/tcp --permanent
+firewall-cmd --zone=public --add-port=1521/tcp --permanent
+firewall-cmd --zone=public --remove-port=8081/tcp   -- to remove port from firewall
+firewall-cmd --state  -- to check the firewall status
+systemctl stop firewalld   -- to stop firewall
+systemctl status firewalld
+systemctl restart firewalld
+firewall-cmd --list-all
+firewall-cmd --permanent --add-rich-rule="rule family='ipv4' source address='192.168.0.11' reject"   --to block ip
+iptables -A INPUT -s 8.8.8.8 -j DROP
+iptables -A INPUT -p tcp -m tcp --dport 5901 -j ACCEPT
+firewall-cmd --remove-rich-rule='rule family=ipv4 source address=192.168.17.112 reject' --permanent  -- to unblock ip
+ip addr del 10.10.122.13/24 dev eth0
+firewall-cmd --add-forward-port=port=80:proto=tcp:toport=8080    -- Port redirection
+firewall-cmd --runtime-to-permanent
+firewall-cmd --remove-forward-port=port=80:proto=tcp:toport=8080:toaddr=   -- To remove the port forward
+https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/security_guide/sec-port_forwarding
+firewall-cmd --reload
+firewall-cmd --add-forward-port=port=80:proto=tcp:toport=443   -- to forward the port
+firewall-cmd --remove-forward-port=port=80:proto=tcp:toport=88:toaddr=443
+iptables-save > /etc/sysconfig/iptables
+===============================================================
+To check open ports
+lsof -i -P -n | grep LISTEN
+==============================================       
+==========================================MYSQL================================================
+mysqldump -u root -p  -S /home/mysql/data/mysql.sock --all-databases --master-data=2 --single-transaction --order-by-primary | gzip > traceability_backup_19_03_2020.sql.gz
+
+mysqldump -u root -p -S /home/mysql/data/mysql.sock traceability |  gzip -9 > traceability_backup_23_02_2020.sql.gz
+mysqldump -u admin -h orient-prod-db.ciz8vupzyqot.ap-south-1.rds.amazonaws.com --compress -p > sample.sql
+mysqldump -u admin -h orient-prod-db.ciz8vupzyqot.ap-south-1.rds.amazonaws.com  --single-transaction traceability -p > sample.sql.gz
+sudo grep "temporary password" /var/log/mysqld.log  -- mysql temporary password location 
+process apache2 and mysql
+service apache2 status
+service mysql status
+service mysql status
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'password';   --  to allow the root remote access
+GRANT ALL PRIVILEGES ON globalnew.* TO 'smartest'@'%';   -- To give full permissions to specific user on specific DB
+mysqldump -u admin -h orient-prod-db.ciz8vupzyqot.ap-south-1.rds.amazonaws.com  --single-transaction traceability -p | gzip > sample.sql.gz
+show status where variable_name = 'threads_connected';   --- Numberos therads means number active connections to DB
+show processlist;  --  Number of active connections to DB
+=========================================================================================================================================
+systemctl list-unit-files   --- It list all services list in centos 7
+
+systemctl --failed   -- To know which services failed when system reboot
+
+swapon --show  -- it will list all swap files and devices
+	
+> /var/spool/mail/root this mean  -- It will empty the file
+
+==============================================
+ lvcreate -l 100%FREE -n lvdata vg1
+ lvresize -l +100%FREE /dev/vg1/lvdata
+ iostat -c  -- it shows the cpu utilizations
+ lvextend -l +100%FREE /dev/vgname/lvname
+ umount -f /mnt/forensic_backups   if traget busy will by executiing this command use next command
+ fuser -k -9 /mnt/forensic_backups
+ mount  -t nfs -o rw,bg,hard,nointr,rsize=32768,wsize=32768,tcp,vers=3,timeo=600,actimeo=0 10.0.0.23:/FileSystem-20200625-1236 /nfs/db12file   -- to mount nfs with specified values.
+ mount  -t nfs -o rw,bg,hard,nointr,rsize=32768,wsize=32768,tcp,vers=3,timeo=600,actimeo=0 10.185.1.3:/backup /db_backup
+ ls -l /dev/disk/by-uuid/ 
+ ls -ldah   size in human readable format
+ strace df --- It will show why df command hungs.  it shows the logs. 
+ umount -f -l -- to unmount nfs filesystem when it nfs mount point hungs. 
+ mount -o nouuid /dev/sdd2 /app  -- it will mount if we face any fs type error while mounting
+ cd ~; lsof | grep /ajga/app02/appbackup   -- to check the open files in fss storage
+================================================
+ netdev and nofail
++++++++++++++++++++++++++++++++++++++++++++++++
+To create swap file 8GB
+dd if=/dev/zero of=/swapfile bs=8M count=1024  -- 8GB file
+dd if=/dev/zero of=/swapfile count=4096 bs=1MiB  -- 4 GB file
+dd if=/dev/zero of=/swapfile count=16384 bs=1MiB  -- 16gb file
+count=15360  --- for 15GB
+mkswap /swapfile
+swapon /swapfile
+
+open /etc/fstab add entry like below
+/swapfile swap swap defaults 0 0
+check swap size
+swapon --show
++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+========================Netstat & Ps ========================================
+
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%mem | head    -- it will give top 10 processes memory utilizations
+ps -eo pid,ppid,cmd,%mem,%cpu --sort=-%cpu | head    -- it will give top 10 processes cpu utilizations
+
+netstat | grep http | wc -l  -- to know number http processes open 
+netstat -plan | grep :80 | awk '{print $5}' | cut -d : -f 1 | sort | uniq -c | sort -nr | head --- it will list all ips who are accessing on port 80 
+
+===============================================================================================================
+cat /etc/oracle-release   -- oracle os version
+rpm -qa --last | grep kernel  -- to chcek last kernel updated date.
+==========================================================================
+======================PRINTER=========================
+Printer details EBS Dev APP w223436apss2001
+lpstat -p
+lpoptions  -p <printer name>
+lpoptions  -p CAC02-CP01
+lpstat -o   -- to check print que
+lp -d TESTPRINTERWYCOM(printername) o76721741.txt  -- To give print from command line (/u01/app/EBTEST/applcsf/out/ in atkins)
+lpstat -W completed  --  it shows all completd jobs
+==========================================================
+========================================MAIL===========================
+To check mail q
+postqueue -p | tail -n 1
+mailq | grep Requests
+mail -s "vamshi-testing" vamshi.karicherla@suneratech.com </dev/null   -- to test mail in chipotle
+echo "this is the body of the email" | mailx -vvv -s "test mail" -r AJGTESt@suneratech.com -S smtp=10.240.14.46 vamshi.karicherla@suneratech.com
+tail -1000 /var/log/maillog | grep -i team-oracle@Chipotle.com  -- chipotle
+========================================================================================================
+If directory containd more files like thousands, then use below command to remove files.
+find /u01/app/oracle/admin/TRLSCDB/adump/  -name '*.aud'  -maxdepth 1 -mtime +7 -exec rm -rf {} \;   
+find . -type f -name '*.log' -print0 -mtime +30 -delete
+
+sh /opt/backscripts/TRLSPRODAPP1DTE.sh > /opt/backupscripts/sample.log 2>&1 -- To save the ouptut of script into file
+sh -x scripname.sh  --- it will show the step by step execution. 
+curl -k url -vvv -- to check the log in server
+===========================================================================
+find /u01/PROD/TRLSPRODSTL/* -type f -maxdepth 1 -mtime +7 -exec rm -rf {} \;
+==================NTP=========================================
+ntpstat -- to view the status of the NTP service on the instance.
+ntpq -p  You can use the ntpq -p command to see a list of peers known to the NTP server and a summary of their state.
+# system-config-date    or   # vim   /etc/ntp.conf
+service ntp start -x  -- to start the ntp service. 
+service  ntpd status  -- 
+server 169.254.169.254 iburst    -- this line should be there in /etc/ntp.conf file to sync with ntp server.
+timedatectl --- it will show the status of ntp synch or not
+sudo timedatectl set-timezone America/Chicago    -- to set the timezone CDT
+===============================================================================================================
+============================================================
+==================SAR====================================
+sar -u -f /var/log/sa/sa29    -- to check CPU utilizations
+============================================================
+=======================ULIMIT===================
+lsof -u tomcat | wc -l
+/etc/security/limits.conf   -- to modify ulimit value
+ps --no-headers auxwwwm | awk '$2 == "-" { print $1 }' | sort | uniq -c | sort -n   --  You can run the below command to find the number of processes opened for every user
+===============================================
+===============RAID=================================
+ mdadm -D /dev/md0
+ mdadm --create /dev/md0 --level=5 --raid-devices=3 /dev/sda1 /dev/sdb1 /dev/sdc1
+ cat /proc/mdstat  -- To check the status of Raid
+======================================================================================
+========================Fail2ban===============================================
+]# systemctl restart fail2ban
+]# fail2ban-client status    
+]# fail2ban-client status sshd   -- To check the particular service status
+]# tail -F /var/log/fail2ban.log 
+=====================================================================================
+==========================DATA-DOG===================================================
+]# service datadog-agent restart    -- To restart the data-dog agent. 
+]# datadog-agent status   -- It will display the data dog agent status
+]# tail -f /var/log/datadog/agent.log     -- Agent log
+================================================================================
+========================================================================================================
+=======================iscsi=================================
+service iscsid start   -- to start the iscsi service 
+==============================================================
+=====================nfs=====================================
+/etc/exports
+exportfs -avr
+/backup 10.251.246.195(rw,sync,no_root_squash,no_all_squash) --- client ip
+mount  -t nfs -o rw,bg,hard,nointr,rsize=32768,wsize=32768,tcp,vers=3,timeo=600,actimeo=0 10.0.0.23:/FileSystem-20200625-1236 /nfs/db12file 
+rw,bg,hard,nointr,rsize=32768,wsize=32768,tcp, vers=3,timeo=600, actimeo=0
+mount  -t nfs -o  rw,bg,hard,nointr,rsize=32768,wsize=32768,tcp,vers=3,timeo=600,actimeo=0 10.251.246.49:/mnt/dtsD3PP0GPJF /mnt/oci_dbbackup
+showmount -e 10.251.246.20 --- server ip
+port 2049
+Below are the exportfs entries for NFS v4 if we not give fsid, mount command will not work it will show the "access denied by server while mounting"
+/u01/app/EBCRP2/fs1 ebsprdapp02.atkinsglobal.com(fsid=0,rw,sync,no_root_squash)
+/u01/app/EBCRP2/fs2 ebsprdapp02.atkinsglobal.com(fsid=1,rw,sync,no_root_squash)
+/u01/app/EBCRP2/fs_ne ebsprdapp02.atkinsglobal.com(fsid=2,rw,sync,no_root_squash)
+/u01/app/EBCRP2/oraInventory ebsprdapp02.atkinsglobal.com(fsid=3,rw,sync,no_root_squash)
+
+rpcinfo -p | grep -i mountd   --- It will show the ports of mount 
+
+================================================================
+======================ppk to pem =======================================
+puttygen Oracle-private.ppk -O private-openssh -o oracle.pem
+====================================================
+ssh-keygen
+ssh-copy-id -i /root/.ssh/id_rsa.pub <client ip>
+=======================================================
+ rsync -avzhe "ssh -i /root/opc.pem" /prod_backup/STERLING_PROD_DB_BACKUP/PROD_20200726  opc@10.218.64.234:/storagegw-6tb-bv/sterling_prod_DB_archive/RMAN_BACKUP
+==================== CSR Generation=============================================================
+openssl req -new -newkey rsa:2048 -nodes -keyout eseal.unilever.com.key -out eseal.unilever.com.csr
+openssl pkcs12 -export -out domain.name.pfx -inkey domain.name.key -in domain.name.crt
+openssl pkcs12 -export -out domain.name.pfx -inkey domain.name.key -in domain.name.crt -in intermediate.crt -in rootca.crt
+openssl pkcs12 -export -out my.pfx -inkey your.key -in 6a89ac122dca8c8a.crt -certfile gd_bundle-g2-g1.crt -passout pass:Sunera@123(optional)  -- converting to pfx format
+openssl pkcs12 -export -out trellisenergy.pfx -inkey trellisenergy_enable.key -in ServerCertificate.crt -certfile ChainBundle2.crt
+openssl pkcs12 -in asserterprd.pfx -out asserterprd1.pem  --- To extract the key file from pfx
+openssl pkcs12 -in ebs.ajg.com.2021.pfx -nocerts -out ebsajgkey.pem -nodes   -- to extract key file
+openssl pkcs12 -in ebs.ajg.com.2021.pfx -nokeys -out ebsajgcombundle.crt   --  to extract bundle certificate file
+openssl pkcs12 -in ebs.ajg.com.2021.pfx -clcerts -nokeys -out ebsajg.crt   --- to extract the certificate
+===============================================================================================================
+====================OCI CLI====================================================================================================
+oci os object put -ns trellisenergy -bn Internal_Trellis --file TRLSPRODDTE_2210_22062020.log --name PRODSTL_DB/TRLSPRODDTE_2210_22062020.log
+oci oc get ns
+============================================================================================================================
+==============================last user login details==============================================
+last
+lastb -- last reboot
+======================================================================================================================
+
+In future, please also perform following steps suggested by Stanley prior to app restart for additional data points.  
+ 
+1.	Do a java thread dump: kill -3 `cat catalina.pid`
+2.	List all processes running: ls -l /proc/`cat catalina.pid`/fd
+================================================================================================================================
+setfacl -d -m  u:tomcat:rwx g:empapp1:rwx EGT
+setfacl -d -m mask:0 /opt/tomcat/emp/TRELLIS_INTERFACE/EOIT
+setfacl -m u:tomcat:rwx g:empapp1:rwx EGT
+setfacl -d -m  u:tomcat:rwx g:empqa:rwx EMP
+setfacl -d -m u:tomcat:rwx g:empapp1:rwx /opt/tomcat/emp/TRELLIS_INTERFACE/EGT
+setfacl -d -m u:tomcat:rwx g:empapp1:rwx /opt/tomcat/emp/TRELLIS_INTERFACE/EMP
+setfacl -d -m u:tomcat:rwx g:empapp1:rwx /opt/tomcat/emp/TRELLIS_INTERFACE/EOIT
+
+================================================================================================================================  
+
+curl -Is http://www.yourURL.com | head -1 You can try this command to check any URL.Status code 200 OK means that the request has succeeded and the URL is reachable.
+curl http://URL
+
+========================================================================================================================
+
+tcpdump -i ens3  -s 0 -nn -w /tmp/trace.pcap   --- Save tcp dump output in file
+==================================================================================
+
+# timedatectl
+# timedatectl set-timezone America/New_York   --- change the tiezone to EST
+# date
+# timedatectl | grep 'Time zone:'
+
+====================================================================================
+#lscpu  
+#watch -n.1 "cat /proc/cpuinfo | grep \"^[c]pu MHz\""   -- cpu clock speed OR per core speed
+#dmesg | grep MHz
+#cat /proc/cpuinfo | grep MHz
+==================================================================================================
+rm symlink_name   --- to remove the sift link
+==========================================================
+uuidgen  -- to generate the new uid value
+==============================================================
+================VNC============================================
+[root@l123437dbss2003 ~]#xhost +   -- Execute this command if we get "no protocol specified error"
+[oracle@l123437dbss2003 ~]$export DISPLAY=127.0.0.1:1   -- If display variable not set error. 
+=====================================================================================
